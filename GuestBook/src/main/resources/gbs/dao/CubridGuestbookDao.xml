@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gbs.dao.GuestbookDao">
+	<resultMap type="guestbook" id="guestbookResultMap">
+		<id column="GNO" property="no" />
+		<result column="EMAIL" property="email" />
+		<result column="PWD" property="pwd" />
+		<result column="CONTENT" property="content" />
+		<result column="CRE_DATE" property="createdDate" />
+		<result column="MOD_DATE" property="modifiedDate" />
+	</resultMap>
+
+	<select id="selectList" resultMap="guestbookResultMap">
+		select GNO, EMAIL, CONTENT,
+		CRE_DATE, MOD_DATE
+		from GUESTBOOKS
+		order by GNO desc
+	</select>
+
+	<insert id="insert" parameterType="guestbook">
+		insert into GUESTBOOKS(EMAIL, PWD, CONTENT, CRE_DATE, MOD_DATE)
+		values (#{email}, #{pwd}, #{content}, now(), now())
+	</insert>
+
+	<update id="update" parameterType="guestbook">
+		update GUESTBOOKS
+		<set>
+			<if test="name != null">MNAME=#{name},</if>
+			<if test="email != null">EMAIL=#{email},</if>
+			MOD_DATE=now()
+		</set>
+		where MNO=#{no}
+	</update>
+
+</mapper>
