@@ -19,19 +19,28 @@
 		order by GNO desc
 	</select>
 
+	<select id="selectOne" parameterType="int" resultMap="guestbookResultMap">
+		select GNO,
+		EMAIL, CONTENT,
+		CRE_DATE, MOD_DATE
+		from GUESTBOOKS
+		where GNO=#{value}
+	</select>
+
 	<insert id="insert" parameterType="guestbook">
-		insert into GUESTBOOKS(EMAIL, PWD, CONTENT, CRE_DATE, MOD_DATE)
-		values (#{email}, #{pwd}, #{content}, now(), now())
+		insert into GUESTBOOKS(EMAIL,
+		PWD, CONTENT, CRE_DATE, MOD_DATE)
+		values (#{email}, #{pwd}, #{content},
+		now(), now())
 	</insert>
 
 	<update id="update" parameterType="guestbook">
 		update GUESTBOOKS
 		<set>
-			<if test="name != null">MNAME=#{name},</if>
-			<if test="email != null">EMAIL=#{email},</if>
+			CONTENT=#{content},			
 			MOD_DATE=now()
 		</set>
-		where MNO=#{no}
+		where GNO=#{no} and PWD=#{pwd}
 	</update>
 
 </mapper>

@@ -5,6 +5,8 @@ import gbs.dao.GuestbookDao;
 import gbs.vo.Guestbook;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,10 +24,9 @@ public class GuestbookAddController implements Controller, DataBinding {
 	@Override
 	public String execute(Map<String, Object> model) throws Exception {
 		Guestbook guestbook = (Guestbook) model.get("guestbook");
-		System.out.println(guestbook.getEmail());
-		if (guestbook.getEmail() == null) { // 입력폼을 요청할 때
+		if (isValidEmail(guestbook.getEmail()) == false) {
 			return "/guestbook/list.do";
-		} else { // 회원 등록을 요청할 때
+		} else {
 			guestbookDao.insert(guestbook);
 			return "redirect:list.do";
 		}
@@ -35,4 +36,16 @@ public class GuestbookAddController implements Controller, DataBinding {
 	public Object[] getDataBinders() {
 		return new Object[] { "guestbook", gbs.vo.Guestbook.class };
 	}
+
+	private boolean isValidEmail(String email) {
+		boolean err = false;
+		String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(email);
+		if (m.matches()) {
+			err = true;
+		}
+		return err;
+	}
+
 }

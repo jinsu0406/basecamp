@@ -42,8 +42,13 @@ public class CubridGuestbookDao implements GuestbookDao {
 
 	@Override
 	public int update(Guestbook guestbook) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		try {
+			int count = sqlSession.update("gbs.dao.GuestbookDao.update", guestbook);
+			sqlSession.commit();
+			return count;
+		} finally {
+			sqlSession.close();
+		}
 	}
-
 }
